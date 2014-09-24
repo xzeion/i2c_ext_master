@@ -31,4 +31,5 @@ bin/wireextender.o: \
  /usr/share/arduino/hardware/teensy/cores/teensy3/Arduino.h \
  /usr/share/arduino/hardware/teensy/cores/teensy3/IntervalTimer.h \
  /usr/share/arduino/libraries/Wire/Wire.h \
+ /usr/share/arduino/hardware/teensy/cores/teensy3/Stream.h \
  /home/brian/git-remote/i2c/itwoc_extend_master/wireextender.h

@@ -12,23 +12,45 @@
 #include <Arduino.h>
 #include <wireextender.h>
 
+void send_a_request(int address, int numBytes);
+
 WireExtender ext;
 
-void setup()
-{
-      Wire.begin();        // join i2c bus (address optional for master)
-      Serial.begin(9600);  // start serial for output
-}
 
-void loop()
-{
-    uint8_t var = ext.get_uint8(2,1);
-    Wire.requestFrom(2, 6);    // request 6 bytes from slave device #2
+
+void send_a_request(int address, int numBytes){
+   Wire.requestFrom(address, numBytes);    // request 6 bytes from slave device #2
 
     while(Wire.available())    // slave may send less than requested
     { 
         char c = Wire.read(); // receive a byte as character
         Serial.print(c);         // print the character
     }
-    delay(100);
 }
+
+
+
+void setup()
+{
+      pinMode(13,OUTPUT);
+      Wire.begin();        // join i2c bus (address optional for master)
+      Serial.begin(9600);  // start serial for output
+}
+
+void loop()
+{
+   // uint8_t var = ext.get_uint8(2,1);
+   // Serial.println(var);
+   //uint16_t var16 = ext.get_uint16(2,1);
+   //Serial.println(var16);
+   uint32_t var32 = ext.get_uint32(2,1);
+   Serial.println(var32);
+   //send_a_request(2,6);
+    delay(100);
+    digitalWrite(13,HIGH);
+    delay(100);
+    digitalWrite(13,LOW);
+    Serial.println("Master is working");
+    ext.set(2,"01WXYZ",6);
+}
+
