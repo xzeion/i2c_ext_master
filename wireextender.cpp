@@ -17,22 +17,18 @@ WireExtender::~WireExtender(){}
 //=================================
 //=================================
 
-void WireExtender::set_register(int addr, int reg){
+void WireExtender::set(int addr, const void* data, int len){
     Wire.beginTransmission(addr);
-    Wire.write(reg);
+    Wire.write((const char*)data,len);
     Wire.endTransmission();
 }
 
 
 uint8_t WireExtender::get_uint8(int addr, int reg){
-    set_register(addr,reg);
+    set(addr,&reg,sizeof(reg));
     Wire.requestFrom(addr, sizeof(uint8_t));
-    uint8_t c;
 
-    while(Wire.available()){
-        c = Wire.read();
-    }
-    return c;
+        return Wire.read();
 }
 
 //------------------------------------
@@ -43,7 +39,7 @@ typedef union {
 //-----------------------------------
 
 uint16_t WireExtender::get_uint16(int addr, int reg){
-    set_register(addr,reg);
+    set(addr,&reg,sizeof(reg));
     Wire.requestFrom(addr, sizeof(uint16_t));
 
     size_t p = 0;
@@ -57,6 +53,7 @@ uint16_t WireExtender::get_uint16(int addr, int reg){
     return buffer.v;
 }
 
+
 //-----------------------------------
 typedef union {
     uint32_t v;
@@ -65,7 +62,7 @@ typedef union {
 //-----------------------------------
 
 uint32_t WireExtender::get_uint32(int addr, int reg){
-    set_register(addr,reg);
+    set(addr,&reg,sizeof(reg));
     Wire.requestFrom(addr, sizeof(uint32_t));
 
     size_t p = 0;
@@ -79,7 +76,7 @@ uint32_t WireExtender::get_uint32(int addr, int reg){
     return buffer.v;
 }
 
-
+/*
 //-----------------------------------
 typedef union {
     float v;
@@ -87,8 +84,8 @@ typedef union {
 } float_converter;
 //-----------------------------------
 
-float WireExtender::get_float(int addr, int reg){
-    set_register(addr,reg);
+float WireExtender::get_float(int addr, void* reg, int len){
+    set(addr,reg,len);
     Wire.requestFrom(addr,sizeof(float));
 
     size_t p = 0;
@@ -103,7 +100,7 @@ float WireExtender::get_float(int addr, int reg){
 }
 
 //-----------------------------------
-/*
+
 //=================================
 //=================================
 void WireExtender::select_register(int addr,int reg){
