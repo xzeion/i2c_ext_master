@@ -37,20 +37,25 @@ void setup()
       Serial.begin(9600);  // start serial for output
 }
 
+int count;
 void loop()
 {
-   // uint8_t var = ext.get_uint8(2,1);
-   // Serial.println(var);
-   //uint16_t var16 = ext.get_uint16(2,1);
-   //Serial.println(var16);
-   uint32_t var32 = ext.get_uint32(2,1);
+   uint8_t var = ext.get_uint8(2,1);
+   Serial.println(var);
+   uint16_t var16 = ext.get_uint16(2,2);
+   Serial.println(var16);
+   uint32_t var32 = ext.get_uint32(2,3);
    Serial.println(var32);
-   //send_a_request(2,6);
+   double dub = ext.get_double(2,4);
+   Serial.println(dub);
+  // send_a_request(2,6);
     delay(100);
     digitalWrite(13,HIGH);
     delay(100);
     digitalWrite(13,LOW);
-    Serial.println("Master is working");
-    ext.set(2,"01WXYZ",6);
+    Serial.print("Master is working: ");
+    count ++;
+    Serial.println(count);
+   // ext.set(2,4,1234); //addr,len,data
 }
 

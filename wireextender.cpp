@@ -8,16 +8,24 @@ By Brian Gratton and James Bliss 07/27/14*/
 #include <Wire.h>
 #include <wireextender.h>
 
+
 WireExtender::WireExtender(){
     Wire.begin();
 }
 
 WireExtender::~WireExtender(){}
 
+#define REGISTER(n,name,type) type get_##name(int addr){\
+  get_##type(addr,n);\
+}
+#include "test.reg"
+#undef REGISTER
+
+
 //=================================
 //=================================
 
-void WireExtender::set(int addr, const void* data, int len){
+void WireExtender::set(int addr, int len, const void* data){
     Wire.beginTransmission(addr);
     Wire.write((const char*)data,len);
     Wire.endTransmission();
@@ -25,10 +33,11 @@ void WireExtender::set(int addr, const void* data, int len){
 
 
 uint8_t WireExtender::get_uint8(int addr, int reg){
-    set(addr,&reg,sizeof(reg));
+    set(addr,sizeof(reg),&reg);
     Wire.requestFrom(addr, sizeof(uint8_t));
-
-        return Wire.read();
+    
+    uint8_t v = Wire.read();
+    return v;
 }
 
 //------------------------------------
@@ -39,9 +48,8 @@ typedef union {
 //-----------------------------------
 
 uint16_t WireExtender::get_uint16(int addr, int reg){
-    set(addr,&reg,sizeof(reg));
+    set(addr,sizeof(reg),&reg);
     Wire.requestFrom(addr, sizeof(uint16_t));
-
     size_t p = 0;
     uint16_converter buffer;
     buffer.v = 0;
@@ -62,7 +70,7 @@ typedef union {
 //-----------------------------------
 
 uint32_t WireExtender::get_uint32(int addr, int reg){
-    set(addr,&reg,sizeof(reg));
+    set(addr,sizeof(reg),&reg);
     Wire.requestFrom(addr, sizeof(uint32_t));
 
     size_t p = 0;
@@ -76,23 +84,23 @@ uint32_t WireExtender::get_uint32(int addr, int reg){
     return buffer.v;
 }
 
-/*
+
 //-----------------------------------
 typedef union {
-    float v;
-    uint8_t bytes[sizeof(float)];
+    double v;
+    uint8_t bytes[sizeof(double)];
 } float_converter;
 //-----------------------------------
 
-float WireExtender::get_float(int addr, void* reg, int len){
-    set(addr,reg,len);
-    Wire.requestFrom(addr,sizeof(float));
+double WireExtender::get_double(int addr, int reg){
+    set(addr,sizeof(reg),&reg);
+    Wire.requestFrom(addr,sizeof(double));
 
     size_t p = 0;
     float_converter buffer;
     buffer.v = 0;
 
-    while(Wire.available() && p < sizeof(float)){
+    while(Wire.available() && p < sizeof(double)){
         uint8_t c = Wire.read();
         buffer.bytes[p++] = c;
     }
@@ -101,6 +109,7 @@ float WireExtender::get_float(int addr, void* reg, int len){
 
 //-----------------------------------
 
+/*
 //=================================
 //=================================
 void WireExtender::select_register(int addr,int reg){
