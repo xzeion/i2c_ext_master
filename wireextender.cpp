@@ -15,11 +15,6 @@ WireExtender::WireExtender(){
 
 WireExtender::~WireExtender(){}
 
-#define REGISTER(n,name,type) type get_##name(int addr){\
-  get_##type(addr,n);\
-}
-#include "test.reg"
-#undef REGISTER
 
 
 //=================================
@@ -32,7 +27,7 @@ void WireExtender::set(int addr, int len, const void* data){
 }
 
 
-uint8_t WireExtender::get_uint8(int addr, int reg){
+uint8_t WireExtender::get_uint8_t(int addr, int reg){
     set(addr,sizeof(reg),&reg);
     Wire.requestFrom(addr, sizeof(uint8_t));
     
@@ -47,7 +42,7 @@ typedef union {
 } uint16_converter;
 //-----------------------------------
 
-uint16_t WireExtender::get_uint16(int addr, int reg){
+uint16_t WireExtender::get_uint16_t(int addr, int reg){
     set(addr,sizeof(reg),&reg);
     Wire.requestFrom(addr, sizeof(uint16_t));
     size_t p = 0;
@@ -69,7 +64,7 @@ typedef union {
 } uint32_converter;
 //-----------------------------------
 
-uint32_t WireExtender::get_uint32(int addr, int reg){
+uint32_t WireExtender::get_uint32_t(int addr, int reg){
     set(addr,sizeof(reg),&reg);
     Wire.requestFrom(addr, sizeof(uint32_t));
 
