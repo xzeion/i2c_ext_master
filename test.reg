@@ -1,0 +1,12 @@
+//Base Registers
+REGISTER(0, extension, uint8_t)
+REGISTER(1, value, double)
+REGISTER(2, unitofmeasure, uint8_t)
+REGISTER(3, minValue, double)
+REGISTER(4, maxValue, double)
+REGISTER(5, maxPoll, double)
+
+
+//Extenstions
+REGISTER(26, attention, uint8_t)
+REGISTER(27, eventValue, double)
